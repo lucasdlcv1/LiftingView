@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Aplicacao/LiftingView.Aplicacao.csproj" />
+    <Project Path="src/Dominio/LiftingView.Dominio.csproj" />
+  </Folder>
+</Solution>
