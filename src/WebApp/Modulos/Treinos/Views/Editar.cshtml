@@ -1,0 +1,178 @@
+@{
+    Layout = "_Layout";
+    ViewBag.Titulo = "Edição de Treino";
+}
+
+@model EditarTreinoViewModel
+
+<form class="card border-primary-subtle shadow-sm mx-auto p-4" style="max-width: 620px;" asp-action="Editar"
+      asp-route-id="@Model.Id" method="post">
+    <input asp-for="Id" type="hidden">
+    <div asp-validation-summary="All" class="text-danger small fw-semibold mb-3"></div>
+
+    <div class="mb-3">
+        <label asp-for="Nome" class="form-label fw-semibold text-primary text-uppercase small">Nome do Treino</label>
+        <input asp-for="Nome" class="form-control">
+        <span asp-validation-for="Nome" class="text-danger small fw-semibold"></span>
+    </div>
+
+    @if (((List<ExercicioDto>)ViewBag.Exercicios).Count == 0)
+    {
+        <div class="alert alert-warning" role="alert">
+            Cadastre pelo menos um exercício antes de montar o treino.
+            <a asp-controller="Exercicio" asp-action="Cadastrar">Cadastrar exercício</a>
+        </div>
+    }
+
+    <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
+        <h5 class="mb-0">Exercícios do treino</h5>
+        <button class="btn btn-outline-primary btn-sm rounded-pill px-3" type="button" id="adicionar-item">
+            Adicionar exercício
+        </button>
+    </div>
+
+    <div id="itens-treino" class="d-flex flex-column gap-3">
+        @for (int i = 0; i < Model.ItensTreino.Count; i++)
+        {
+            EditarItemTreinoViewModel item = Model.ItensTreino[i];
+            <section class="item-treino border rounded-3 p-3">
+                <input type="hidden" name="ItensTreino.Index" value="@i">
+                <input type="hidden" name="ItensTreino[@i].Id" value="@item.Id">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="mb-0">Exercício</h6>
+                    <button class="btn btn-outline-danger btn-sm remover-item" type="button">Remover</button>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="ItensTreino_@(i)__ExercicioId">Exercício</label>
+                    <select class="form-select" id="ItensTreino_@(i)__ExercicioId" name="ItensTreino[@i].ExercicioId"
+                            required>
+                        <option value="">Selecione um exercício</option>
+                        @foreach (ExercicioDto exercicio in (List<ExercicioDto>)ViewBag.Exercicios)
+                        {
+                            if (exercicio.Id == item.ExercicioId)
+                            {
+                                <option value="@exercicio.Id" selected>@exercicio.Nome</option>
+                            }
+                            else
+                            {
+                                <option value="@exercicio.Id">@exercicio.Nome</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-6 col-md-4">
+                        <label class="form-label" for="ItensTreino_@(i)__Series">Séries</label>
+                        <input class="form-control" id="ItensTreino_@(i)__Series" name="ItensTreino[@i].Series"
+                               type="number" min="1" value="@item.Series" required>
+                    </div>
+                    <div class="col-6 col-md-4">
+                        <label class="form-label" for="ItensTreino_@(i)__Repeticoes">Repetições</label>
+                        <input class="form-control" id="ItensTreino_@(i)__Repeticoes" name="ItensTreino[@i].Repeticoes"
+                               type="number" min="1" value="@item.Repeticoes" required>
+                    </div>
+                    <div class="col-6 col-md-4">
+                        <label class="form-label" for="ItensTreino_@(i)__Ordem">Ordem</label>
+                        <input class="form-control" id="ItensTreino_@(i)__Ordem" name="ItensTreino[@i].Ordem" type="number"
+                               min="1" value="@item.Ordem" required>
+                    </div>
+                    <div class="col-6 col-md-4">
+                        <label class="form-label" for="ItensTreino_@(i)__IntervaloSegundos">Intervalo (segundos)</label>
+                        <input class="form-control" id="ItensTreino_@(i)__IntervaloSegundos"
+                               name="ItensTreino[@i].IntervaloSegundos" type="number" min="0" value="@item.IntervaloSegundos"
+                               required>
+                    </div>
+                    <div class="col-6 col-md-4">
+                        <label class="form-label" for="ItensTreino_@(i)__Carga">Carga (kg)</label>
+                        <input class="form-control" id="ItensTreino_@(i)__Carga" name="ItensTreino[@i].Carga" type="number"
+                               min="0" value="@item.Carga" required>
+                    </div>
+                    <div class="col-6 col-md-4">
+                        <label class="form-label" for="ItensTreino_@(i)__FatorTecnica">Fator da técnica</label>
+                        <input class="form-control" id="ItensTreino_@(i)__FatorTecnica" name="ItensTreino[@i].FatorTecnica"
+                               type="number" min="0" step="0.01" value="@item.FatorTecnica" required>
+                    </div>
+                </div>
+            </section>
+        }
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mt-4">
+        <a class="btn btn-outline-primary rounded-pill px-4" asp-action="Listar">Voltar</a>
+        <button class="btn btn-primary rounded-pill px-4" type="submit">Confirmar</button>
+    </div>
+</form>
+
+<template id="modelo-item-treino">
+    <section class="item-treino border rounded-3 p-3">
+        <input type="hidden" name="ItensTreino.Index" value="__index__">
+        <input type="hidden" name="ItensTreino[__index__].Id" value="">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="mb-0">Exercício</h6>
+            <button class="btn btn-outline-danger btn-sm remover-item" type="button">Remover</button>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="ItensTreino___index____ExercicioId">Exercício</label>
+            <select class="form-select" id="ItensTreino___index____ExercicioId"
+                    name="ItensTreino[__index__].ExercicioId" required>
+                <option value="">Selecione um exercício</option>
+                @foreach (ExercicioDto exercicio in (List<ExercicioDto>)ViewBag.Exercicios)
+                {
+                    <option value="@exercicio.Id">@exercicio.Nome</option>
+                }
+            </select>
+        </div>
+        <div class="row g-3">
+            <div class="col-6 col-md-4">
+                <label class="form-label" for="ItensTreino___index____Series">Séries</label>
+                <input class="form-control" id="ItensTreino___index____Series" name="ItensTreino[__index__].Series"
+                       type="number" min="1" value="1" required>
+            </div>
+            <div class="col-6 col-md-4">
+                <label class="form-label" for="ItensTreino___index____Repeticoes">Repetições</label>
+                <input class="form-control" id="ItensTreino___index____Repeticoes"
+                       name="ItensTreino[__index__].Repeticoes" type="number" min="1" value="1" required>
+            </div>
+            <div class="col-6 col-md-4">
+                <label class="form-label" for="ItensTreino___index____Ordem">Ordem</label>
+                <input class="form-control" id="ItensTreino___index____Ordem" name="ItensTreino[__index__].Ordem"
+                       type="number" min="1" value="1" required>
+            </div>
+            <div class="col-6 col-md-4">
+                <label class="form-label" for="ItensTreino___index____IntervaloSegundos">Intervalo (segundos)</label>
+                <input class="form-control" id="ItensTreino___index____IntervaloSegundos"
+                       name="ItensTreino[__index__].IntervaloSegundos" type="number" min="0" value="0" required>
+            </div>
+            <div class="col-6 col-md-4">
+                <label class="form-label" for="ItensTreino___index____Carga">Carga (kg)</label>
+                <input class="form-control" id="ItensTreino___index____Carga" name="ItensTreino[__index__].Carga"
+                       type="number" min="0" value="0" required>
+            </div>
+            <div class="col-6 col-md-4">
+                <label class="form-label" for="ItensTreino___index____FatorTecnica">Fator da técnica</label>
+                <input class="form-control" id="ItensTreino___index____FatorTecnica"
+                       name="ItensTreino[__index__].FatorTecnica" type="number" min="0" step="0.01" value="1" required>
+            </div>
+        </div>
+    </section>
+</template>
+
+<script>
+    (() => {
+        const container = document.getElementById("itens-treino");
+        const template = document.getElementById("modelo-item-treino");
+        let nextIndex = @Model.ItensTreino.Count;
+
+        document.getElementById("adicionar-item").addEventListener("click", () => {
+            const html = template.innerHTML.replaceAll("__index__", nextIndex++);
+            container.insertAdjacentHTML("beforeend", html);
+        });
+
+        container.addEventListener("click", event => {
+            if (event.target.closest(".remover-item"))
+                event.target.closest(".item-treino").remove();
+        });
+    })();
+</script>

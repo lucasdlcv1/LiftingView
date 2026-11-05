@@ -2,5 +2,7 @@
   <Folder Name="/src/">
     <Project Path="src/Aplicacao/LiftingView.Aplicacao.csproj" />
     <Project Path="src/Dominio/LiftingView.Dominio.csproj" />
+    <Project Path="src/Infraestrutura/LiftingView.Infraestrutura.csproj" />
+    <Project Path="src/WebApp/LiftingView.WebApp.csproj" />
   </Folder>
 </Solution>

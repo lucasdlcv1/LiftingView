@@ -1,0 +1,59 @@
+@{
+    Layout = "_Layout";
+    ViewBag.Titulo = "Listagem de Treinos";
+}
+
+@model List<TreinoDto>
+
+<a class="btn btn-outline-primary rounded-pill px-4 mb-3" asp-action="Cadastrar">Cadastrar Novo</a>
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-primary border-start border-primary border-4 rounded-3" role="alert">
+        Nenhum treino cadastrado.
+    </div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-2">
+        @foreach (TreinoDto treino in Model)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                            <h5 class="card-title mb-0">@treino.Nome</h5>
+                            <span class="badge text-bg-primary rounded-pill">@treino.Id.ToString("N")[..8]</span>
+                        </div>
+
+                        <p class="text-body-secondary">
+                            @treino.ItensTreino.Count exercício(s)
+                        </p>
+
+                        @if (treino.ItensTreino.Count > 0)
+                        {
+                            <ul class="list-group list-group-flush mb-3">
+                                @foreach (ItemTreinoDto item in treino.ItensTreino.OrderBy(item => item.Ordem))
+                                {
+                                    <li class="list-group-item px-0">
+                                        Item @item.Ordem: @item.Series série(s) × @item.Repeticoes repetição(ões)
+                                    </li>
+                                }
+                            </ul>
+                        }
+
+                        <div class="d-flex flex-wrap gap-2 mt-auto justify-content-end">
+                            <a class="btn btn-outline-primary btn-sm rounded-pill px-3" asp-action="Editar"
+                               asp-route-id="@treino.Id">Editar</a>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2 mt-auto justify-content-end">
+                            <a class="btn btn-outline-primary btn-sm rounded-pill px-3" asp-action="Excluir"
+                               asp-route-id="@treino.Id">Excluir</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

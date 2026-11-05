@@ -1,0 +1,39 @@
+@{
+    Layout = "_Layout";
+    ViewBag.Titulo = "Início";
+}
+
+<div class="row g-4 pb-4">
+    <div class="col-md-6 col-lg-4">
+        <div class="card border-primary-subtle shadow-sm">
+            <div class="card-body text-center p-4">
+                <h5 class="card-title text-primary">Exercicios</h5>
+                <p class="card-text text-secondary">Cadastre os exercicios</p>
+                <a class="btn btn-outline-primary rounded-pill px-4" asp-controller="Exercicio"
+                   asp-action="Listar">Acessar</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4">
+        <div class="card border-primary-subtle shadow-sm">
+            <div class="card-body text-center p-4">
+                <h5 class="card-title text-primary">Treinos</h5>
+                <p class="card-text text-secondary">Cadastre os Treinos</p>
+                <a class="btn btn-outline-primary rounded-pill px-4" asp-controller="Treino"
+                   asp-action="Listar">Acessar</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4">
+        <div class="card border-primary-subtle shadow-sm">
+            <div class="card-body text-center p-4">
+                <h5 class="card-title text-primary">Registros</h5>
+                <p class="card-text text-secondary">Cadastre os Registros</p>
+                <a class="btn btn-outline-primary rounded-pill px-4" asp-controller="Treino"
+                   asp-action="Listar">Acessar</a>
+            </div>
+        </div>
+    </div>
+</div>
