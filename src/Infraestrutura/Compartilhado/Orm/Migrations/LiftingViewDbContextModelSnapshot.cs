@@ -50,6 +50,68 @@ namespace LiftingView.Infraestrutura.Compartilhado.Orm.Migrations
                     b.ToTable("TBExercicios", (string)null);
                 });
 
+            modelBuilder.Entity("LiftingView.Dominio.Modulos.Registros.ItemRegistro", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("CargaUtilizada")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ExercicioId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Observacoes")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<Guid>("RegistroId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("RepeticoesRealizadas")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SeriesRealizadas")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExercicioId");
+
+                    b.HasIndex("RegistroId");
+
+                    b.ToTable("ItensRegistro", (string)null);
+                });
+
+            modelBuilder.Entity("LiftingView.Dominio.Modulos.Registros.Registro", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DataFim")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataInicio")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Observacoes")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<Guid?>("TreinoOrigemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TreinoOrigemId");
+
+                    b.ToTable("Registros", (string)null);
+                });
+
             modelBuilder.Entity("LiftingView.Dominio.Modulos.Treinos.ItemTreino", b =>
                 {
                     b.Property<Guid>("Id")
@@ -101,7 +163,36 @@ namespace LiftingView.Infraestrutura.Compartilhado.Orm.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Treinos");
+                    b.ToTable("Treinos", (string)null);
+                });
+
+            modelBuilder.Entity("LiftingView.Dominio.Modulos.Registros.ItemRegistro", b =>
+                {
+                    b.HasOne("LiftingView.Dominio.Modulos.Exercicios.Exercicio", "Exercicio")
+                        .WithMany()
+                        .HasForeignKey("ExercicioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("LiftingView.Dominio.Modulos.Registros.Registro", "Registro")
+                        .WithMany("ItensRegistro")
+                        .HasForeignKey("RegistroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Exercicio");
+
+                    b.Navigation("Registro");
+                });
+
+            modelBuilder.Entity("LiftingView.Dominio.Modulos.Registros.Registro", b =>
+                {
+                    b.HasOne("LiftingView.Dominio.Modulos.Treinos.Treino", "TreinoOrigem")
+                        .WithMany()
+                        .HasForeignKey("TreinoOrigemId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("TreinoOrigem");
                 });
 
             modelBuilder.Entity("LiftingView.Dominio.Modulos.Treinos.ItemTreino", b =>
@@ -121,6 +212,11 @@ namespace LiftingView.Infraestrutura.Compartilhado.Orm.Migrations
                     b.Navigation("Exercicio");
 
                     b.Navigation("Treino");
+                });
+
+            modelBuilder.Entity("LiftingView.Dominio.Modulos.Registros.Registro", b =>
+                {
+                    b.Navigation("ItensRegistro");
                 });
 
             modelBuilder.Entity("LiftingView.Dominio.Modulos.Treinos.Treino", b =>

@@ -11,11 +11,10 @@ public sealed class TreinoConfiguration : IEntityTypeConfiguration<Treino>
         builder.HasKey(treino => treino.Id);
 
         builder.Property(treino => treino.Nome)
-            .IsRequired()
-            .HasMaxLength(100);
+            .IsRequired();
 
         builder.HasMany(treino => treino.ItensTreino)
-            .WithOne()
+            .WithOne(itemTreino => itemTreino.Treino)
             .HasForeignKey(itemTreino => itemTreino.TreinoId)
             .OnDelete(DeleteBehavior.Cascade);
     }

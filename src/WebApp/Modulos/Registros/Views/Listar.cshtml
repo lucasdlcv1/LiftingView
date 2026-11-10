@@ -1,0 +1,63 @@
+@{
+    Layout = "_Layout";
+    ViewBag.Titulo = "Registros";
+}
+
+@model List<RegistroDto>
+
+<a class="btn btn-primary rounded-pill px-4 mb-3" asp-action="Cadastrar">Novo registro</a>
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-primary border-start border-primary border-4 rounded-3" role="alert">
+        Nenhum registro cadastrado.
+    </div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
+        @foreach (RegistroDto registro in Model)
+        {
+            <div class="col">
+                <article class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                            <h3 class="h5 mb-0">@registro.Data.ToString("dd/MM/yyyy")</h3>
+                            <span class="badge text-bg-primary rounded-pill">
+                                @(registro.TreinoNome ?? "Treino removido")
+                            </span>
+                        </div>
+
+                        <ul class="list-group list-group-flush mb-3">
+                            @foreach (ItemRegistroDto item in registro.ItensRegistro)
+                            {
+                                <li class="list-group-item px-0">
+                                    <strong>@item.ExercicioNome</strong><br>
+                                    <span class="text-body-secondary">
+                                        @item.SeriesRealizadas × @item.RepeticoesRealizadas · @item.CargaUtilizada kg
+                                    </span>
+                                    @if (!string.IsNullOrWhiteSpace(item.Observacoes))
+                                    {
+                                        <div class="small text-body-secondary">@item.Observacoes</div>
+                                    }
+                                </li>
+                            }
+                        </ul>
+
+                        @if (!string.IsNullOrWhiteSpace(registro.Observacoes))
+                        {
+                            <p class="card-text text-body-secondary">@registro.Observacoes</p>
+                        }
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a class="btn btn-outline-primary btn-sm rounded-pill px-3" asp-action="Editar"
+                               asp-route-id="@registro.Id">Editar</a>
+                            <a class="btn btn-outline-danger btn-sm rounded-pill px-3" asp-action="Excluir"
+                               asp-route-id="@registro.Id">Excluir</a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        }
+    </div>
+}

@@ -1,7 +1,9 @@
 using LiftingView.Dominio.Modulos.Exercicios;
+using LiftingView.Dominio.Modulos.Registros;
 using LiftingView.Dominio.Modulos.Treinos;
 using LiftingView.Infraestrutura.Compartilhado.Orm;
 using LiftingView.Infraestrutura.Modulos.Exercicios;
+using LiftingView.Infraestrutura.Modulos.Registros;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,5 +26,6 @@ public static class InjecaoDependencia
 
         services.AddScoped<IRepositorioExercicio, RepositorioExercicioEmOrm>();
         services.AddScoped<IRepositorioTreino, RepositorioTreinoEmOrm>();
+        services.AddScoped<IRepositorioRegistro, RepositorioRegistroEmOrm>();
     }
 }
