@@ -13,6 +13,9 @@ public sealed class Registro : EntidadeBase<Registro>
     public List<ItemRegistro> ItensRegistro { get; private set; } = [];
     public string Observacoes { get; private set; } = string.Empty;
 
+    public decimal VolumeLoadTotal =>
+        ItensRegistro.Sum(item => item.CalcularVolumeLoad());
+
     public Registro(Guid? treinoOrigemId, DateTime dataInicio, DateTime? dataFim, string observacoes)
     {
         TreinoOrigemId = treinoOrigemId;

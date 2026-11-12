@@ -25,9 +25,6 @@ public sealed class Exercicio : EntidadeBase<Exercicio>
         if (string.IsNullOrWhiteSpace(Nome))
             erros.Add("O nome do exercício é obrigatório.");
 
-        if (string.IsNullOrWhiteSpace(Descricao))
-            erros.Add("A descrição do exercício é obrigatória.");
-
         if (string.IsNullOrWhiteSpace(GrupoMuscular))
             erros.Add("O grupo muscular do exercício é obrigatório.");
 

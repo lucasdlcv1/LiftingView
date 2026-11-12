@@ -15,6 +15,13 @@ public sealed class ItemRegistroConfiguration : IEntityTypeConfiguration<ItemReg
             .IsRequired()
             .HasMaxLength(1000);
 
+        builder.Property(item => item.FatorTecnica)
+            .HasDefaultValue(1m)
+            .HasPrecision(18, 2);
+
+        builder.Property(item => item.Ordem)
+            .HasDefaultValue(1);
+
         builder.HasOne(item => item.Exercicio)
             .WithMany()
             .HasForeignKey(item => item.ExercicioId)

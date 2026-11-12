@@ -62,10 +62,21 @@ namespace LiftingView.Infraestrutura.Compartilhado.Orm.Migrations
                     b.Property<Guid>("ExercicioId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<decimal>("FatorTecnica")
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(1m);
+
                     b.Property<string>("Observacoes")
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("Ordem")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
 
                     b.Property<Guid>("RegistroId")
                         .HasColumnType("uniqueidentifier");

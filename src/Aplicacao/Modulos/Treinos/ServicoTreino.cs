@@ -149,14 +149,16 @@ public sealed class ServicoTreino(
                 item.Id,
                 item.TreinoId,
                 item.ExercicioId,
+                item.Exercicio.Nome,
                 item.Series,
                 item.Repeticoes,
                 item.Ordem,
                 item.IntervaloSegundos,
                 item.Carga,
-                item.FatorTecnica))
+                item.FatorTecnica,
+                item.CalcularVolumeLoad()))
             .ToList();
 
-        return new TreinoDto(treino.Id, treino.Nome, itensTreino);
+        return new TreinoDto(treino.Id, treino.Nome, itensTreino, treino.VolumeLoadTotal);
     }
 }

@@ -48,6 +48,89 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
             crossorigin="anonymous"></script>
+    <script>
+        (() => {
+            document.querySelectorAll("[data-sortable-list]").forEach(container => {
+                let draggedItem = null;
+
+                const updateOrder = () => {
+                    const items = [...container.querySelectorAll(":scope > [data-sortable-item]")];
+                    items.forEach((item, index) => {
+                        const orderInput = item.querySelector("[data-order-input]");
+                        const orderLabel = item.querySelector("[data-order-label]");
+                        const moveUp = item.querySelector("[data-move-up]");
+                        const moveDown = item.querySelector("[data-move-down]");
+
+                        if (orderInput)
+                            orderInput.value = String(index + 1);
+                        if (orderLabel)
+                            orderLabel.textContent = String(index + 1);
+                        if (moveUp)
+                            moveUp.disabled = index === 0;
+                        if (moveDown)
+                            moveDown.disabled = index === items.length - 1;
+                    });
+                };
+
+                container.addEventListener("click", event => {
+                    const target = event.target instanceof Element ? event.target : null;
+                    const moveUp = target?.closest("[data-move-up]");
+                    const moveDown = target?.closest("[data-move-down]");
+                    const item = target?.closest("[data-sortable-item]");
+
+                    if (!item)
+                        return;
+
+                    if (moveUp && item.previousElementSibling)
+                        container.insertBefore(item, item.previousElementSibling);
+                    else if (moveDown && item.nextElementSibling)
+                        container.insertBefore(item.nextElementSibling, item);
+                    else
+                        return;
+
+                    updateOrder();
+                });
+
+                container.addEventListener("dragstart", event => {
+                    const target = event.target instanceof Element ? event.target : null;
+                    if (!target?.closest("[data-drag-handle]"))
+                        return;
+
+                    draggedItem = target.closest("[data-sortable-item]");
+                    if (!draggedItem)
+                        return;
+
+                    event.dataTransfer.effectAllowed = "move";
+                    event.dataTransfer.setData("text/plain", "");
+                    draggedItem.classList.add("opacity-50");
+                });
+
+                container.addEventListener("dragover", event => {
+                    if (!draggedItem)
+                        return;
+
+                    const target = event.target instanceof Element ? event.target : null;
+                    const targetItem = target?.closest("[data-sortable-item]");
+                    if (!targetItem || targetItem === draggedItem || targetItem.parentElement !== container)
+                        return;
+
+                    event.preventDefault();
+                    const bounds = targetItem.getBoundingClientRect();
+                    const insertBefore = event.clientY < bounds.top + bounds.height / 2;
+                    container.insertBefore(draggedItem, insertBefore ? targetItem : targetItem.nextElementSibling);
+                });
+
+                container.addEventListener("dragend", () => {
+                    draggedItem?.classList.remove("opacity-50");
+                    draggedItem = null;
+                    updateOrder();
+                });
+
+                container.addEventListener("items-reordered", updateOrder);
+                updateOrder();
+            });
+        })();
+    </script>
 </body>
 
 </html>

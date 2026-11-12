@@ -15,6 +15,17 @@ public sealed class TreinoController(
     }
 
     [HttpGet]
+    public ActionResult Detalhes(Guid id)
+    {
+        var resultado = servicoTreino.SelecionarPorId(id);
+
+        if (resultado.IsFailed)
+            return RedirectToAction(nameof(Listar));
+
+        return View(resultado.Value);
+    }
+
+    [HttpGet]
     public ActionResult Cadastrar()
     {
         CadastrarTreinoViewModel viewModel = new();

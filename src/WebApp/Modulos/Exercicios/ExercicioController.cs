@@ -21,22 +21,27 @@ public sealed class ExercicioController(ServicoExercicio servicoExercicio) : Con
     {
         CadastrarExercicioViewModel viewModel = new("", "", "");
 
-        return View();
+        return View(viewModel);
     }
 
     [HttpPost]
     public ActionResult Cadastrar(CadastrarExercicioViewModel viewModel)
     {
-        Result<Guid> resultado = servicoExercicio.Cadastrar(new CadastrarExercicioDto(viewModel.Nome, viewModel.Descricao, viewModel.GrupoMuscular));
+        if (!ModelState.IsValid)
+            return View(viewModel);
+
+        Result<Guid> resultado = servicoExercicio.Cadastrar(new CadastrarExercicioDto(
+            viewModel.Nome,
+            viewModel.Descricao ?? string.Empty,
+            viewModel.GrupoMuscular));
 
         if (resultado.IsFailed)
         {
-            string mensagemErro = resultado.Errors[0].Message;
-
             ModelState.AddModelError(string.Empty, resultado.Errors[0].Message);
             return View(viewModel);
         }
-        return RedirectToAction("Listar");
+
+        return RedirectToAction(nameof(Listar));
     }
 
 
@@ -59,13 +64,19 @@ public sealed class ExercicioController(ServicoExercicio servicoExercicio) : Con
         );
 
 
-        return View();
+        return View(viewModel);
     }
 
     [HttpPost]
 
     public ActionResult Editar(Guid id, EditarExercicioViewModel viewModel)
     {
+        if (id != viewModel.Id)
+            return BadRequest();
+
+        if (!ModelState.IsValid)
+            return View(viewModel);
+
         EditarExercicioDto dto = new(
            viewModel.Id,
            viewModel.Nome ?? string.Empty,
@@ -79,7 +90,9 @@ public sealed class ExercicioController(ServicoExercicio servicoExercicio) : Con
         {
             foreach (IError erro in resultado.Errors)
             {
-                string campo = erro.Metadata["Campo"].ToString() ?? string.Empty;
+                string campo = erro.Metadata.TryGetValue("Campo", out object? metadata)
+                    ? metadata?.ToString() ?? string.Empty
+                    : string.Empty;
 
                 ModelState.AddModelError(campo, erro.Message);
             }
@@ -109,7 +122,13 @@ public sealed class ExercicioController(ServicoExercicio servicoExercicio) : Con
     [HttpPost]
     public ActionResult Excluir(Guid id, ExcluirExercicioViewModel viewModel)
     {
-        servicoExercicio.Excluir(viewModel.Id);
+        Result resultado = servicoExercicio.Excluir(viewModel.Id);
+
+        if (resultado.IsFailed)
+        {
+            ModelState.AddModelError(string.Empty, resultado.Errors[0].Message);
+            return View(viewModel);
+        }
 
         return RedirectToAction(nameof(Listar));
     }

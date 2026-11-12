@@ -9,6 +9,9 @@ public sealed class Treino : EntidadeBase<Treino>
 
     public List<ItemTreino> ItensTreino { get; set; } = [];
 
+    public decimal VolumeLoadTotal =>
+        ItensTreino.Sum(item => item.CalcularVolumeLoad());
+
     public Treino(string nome)
     {
         Nome = nome;

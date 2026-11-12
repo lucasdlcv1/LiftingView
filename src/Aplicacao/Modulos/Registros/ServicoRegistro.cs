@@ -28,9 +28,11 @@ public sealed class ServicoRegistro(
         {
             ItemRegistro itemRegistro = new(
                 itemDto.ExercicioId,
+                itemDto.Ordem,
                 itemDto.SeriesRealizadas,
                 itemDto.RepeticoesRealizadas,
                 itemDto.CargaUtilizada,
+                itemDto.FatorTecnica,
                 itemDto.Observacoes);
             erros.AddRange(itemRegistro.Validar());
 
@@ -97,9 +99,11 @@ public sealed class ServicoRegistro(
 
             ItemRegistro itemRegistro = new(
                 itemDto.ExercicioId,
+                itemDto.Ordem,
                 itemDto.SeriesRealizadas,
                 itemDto.RepeticoesRealizadas,
                 itemDto.CargaUtilizada,
+                itemDto.FatorTecnica,
                 itemDto.Observacoes)
             {
                 Id = itemDto.Id == Guid.Empty ? Guid.CreateVersion7() : itemDto.Id
@@ -163,14 +167,18 @@ public sealed class ServicoRegistro(
     private static RegistroDto ConverterParaDto(Registro registro)
     {
         List<ItemRegistroDto> itensRegistro = registro.ItensRegistro
+            .OrderBy(item => item.Ordem)
             .Select(item => new ItemRegistroDto(
                 item.Id,
                 item.ExercicioId,
                 item.Exercicio.Nome,
+                item.Ordem,
                 item.SeriesRealizadas,
                 item.RepeticoesRealizadas,
                 item.CargaUtilizada,
-                item.Observacoes))
+                item.FatorTecnica,
+                item.Observacoes,
+                item.CalcularVolumeLoad()))
             .ToList();
 
         return new RegistroDto(
@@ -179,6 +187,7 @@ public sealed class ServicoRegistro(
             registro.TreinoOrigemId,
             registro.TreinoOrigem?.Nome,
             registro.Observacoes,
-            itensRegistro);
+            itensRegistro,
+            registro.VolumeLoadTotal);
     }
 }

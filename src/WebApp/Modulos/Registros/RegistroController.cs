@@ -17,6 +17,17 @@ public sealed class RegistroController(
     }
 
     [HttpGet]
+    public ActionResult Detalhes(Guid id)
+    {
+        var resultado = servicoRegistro.SelecionarPorId(id);
+
+        if (resultado.IsFailed)
+            return RedirectToAction(nameof(Listar));
+
+        return View(resultado.Value);
+    }
+
+    [HttpGet]
     public ActionResult Cadastrar(Guid? treinoId)
     {
         RegistroViewModel viewModel = new();
@@ -36,10 +47,12 @@ public sealed class RegistroController(
                     .OrderBy(item => item.Ordem)
                     .Select(item => new ItemRegistroViewModel
                     {
+                        Ordem = item.Ordem,
                         ExercicioId = item.ExercicioId,
                         SeriesRealizadas = item.Series,
                         RepeticoesRealizadas = item.Repeticoes,
-                        CargaUtilizada = item.Carga
+                        CargaUtilizada = item.Carga,
+                        FatorTecnica = item.FatorTecnica
                     })
                     .ToList();
             }
@@ -65,13 +78,15 @@ public sealed class RegistroController(
         CadastrarRegistroDto dto = new(
             viewModel.Data,
             viewModel.TreinoId!.Value,
-            viewModel.Observacoes,
+            viewModel.Observacoes ?? string.Empty,
             viewModel.ItensRegistro.Select(item => new CadastrarItemRegistroDto(
                 item.ExercicioId!.Value,
+                item.Ordem,
                 item.SeriesRealizadas,
                 item.RepeticoesRealizadas,
                 item.CargaUtilizada,
-                item.Observacoes)).ToList());
+                item.FatorTecnica,
+                item.Observacoes ?? string.Empty)).ToList());
 
         var resultado = servicoRegistro.Cadastrar(dto);
 
@@ -105,10 +120,12 @@ public sealed class RegistroController(
                 .Select(item => new ItemRegistroViewModel
                 {
                     Id = item.Id,
+                    Ordem = item.Ordem,
                     ExercicioId = item.ExercicioId,
                     SeriesRealizadas = item.SeriesRealizadas,
                     RepeticoesRealizadas = item.RepeticoesRealizadas,
                     CargaUtilizada = item.CargaUtilizada,
+                    FatorTecnica = item.FatorTecnica,
                     Observacoes = item.Observacoes
                 })
                 .ToList()
@@ -138,14 +155,16 @@ public sealed class RegistroController(
             id,
             viewModel.Data,
             viewModel.TreinoId,
-            viewModel.Observacoes,
+            viewModel.Observacoes ?? string.Empty,
             viewModel.ItensRegistro.Select(item => new EditarItemRegistroDto(
                 item.Id ?? Guid.Empty,
                 item.ExercicioId!.Value,
+                item.Ordem,
                 item.SeriesRealizadas,
                 item.RepeticoesRealizadas,
                 item.CargaUtilizada,
-                item.Observacoes)).ToList());
+                item.FatorTecnica,
+                item.Observacoes ?? string.Empty)).ToList());
 
         var resultado = servicoRegistro.Editar(dto);
 

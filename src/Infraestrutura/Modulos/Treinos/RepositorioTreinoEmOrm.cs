@@ -10,6 +10,7 @@ public sealed class RepositorioTreinoEmOrm(LiftingViewDbContext dbContext)
     {
         return registros
         .Include(treino => treino.ItensTreino)
+            .ThenInclude(item => item.Exercicio)
         .SingleOrDefault(treino => treino.Id == idSelecionado);
     }
 
@@ -17,6 +18,7 @@ public sealed class RepositorioTreinoEmOrm(LiftingViewDbContext dbContext)
     {
         return registros
             .Include(treino => treino.ItensTreino)
+                .ThenInclude(item => item.Exercicio)
             .ToList();
     }
 

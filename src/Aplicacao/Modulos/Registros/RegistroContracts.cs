@@ -8,9 +8,11 @@ public record CadastrarRegistroDto(
 
 public record CadastrarItemRegistroDto(
     Guid ExercicioId,
+    int Ordem,
     int SeriesRealizadas,
     int RepeticoesRealizadas,
     int CargaUtilizada,
+    decimal FatorTecnica,
     string Observacoes);
 
 public record EditarRegistroDto(
@@ -23,9 +25,11 @@ public record EditarRegistroDto(
 public record EditarItemRegistroDto(
     Guid Id,
     Guid ExercicioId,
+    int Ordem,
     int SeriesRealizadas,
     int RepeticoesRealizadas,
     int CargaUtilizada,
+    decimal FatorTecnica,
     string Observacoes);
 
 public record RegistroDto(
@@ -34,13 +38,17 @@ public record RegistroDto(
     Guid? TreinoId,
     string? TreinoNome,
     string Observacoes,
-    List<ItemRegistroDto> ItensRegistro);
+    List<ItemRegistroDto> ItensRegistro,
+    decimal VolumeLoadTotal);
 
 public record ItemRegistroDto(
     Guid Id,
     Guid ExercicioId,
     string ExercicioNome,
+    int Ordem,
     int SeriesRealizadas,
     int RepeticoesRealizadas,
     int CargaUtilizada,
-    string Observacoes);
+    decimal FatorTecnica,
+    string Observacoes,
+    decimal VolumeLoad);

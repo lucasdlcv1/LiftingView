@@ -1,0 +1,53 @@
+@{
+    Layout = "_Layout";
+    ViewBag.Titulo = "Detalhes do treino";
+}
+
+@model TreinoDto
+
+<section class="card shadow-sm">
+    <div class="card-body">
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+            <div>
+                <h3 class="h4">@Model.Nome</h3>
+                <p class="text-body-secondary mb-0">@Model.ItensTreino.Count exercício(s)</p>
+            </div>
+            <div class="text-end">
+                <div class="small text-body-secondary">Volume Load total</div>
+                <strong class="fs-4">@Model.VolumeLoadTotal.ToString("N2")</strong>
+            </div>
+        </div>
+
+        @if (Model.ItensTreino.Count == 0)
+        {
+            <p class="text-body-secondary">Este treino não possui exercícios cadastrados.</p>
+        }
+        else
+        {
+            <ol class="list-group list-group-numbered">
+                @foreach (ItemTreinoDto item in Model.ItensTreino.OrderBy(item => item.Ordem))
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-start gap-3">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-semibold">@item.ExercicioNome</div>
+                            @item.Series série(s) × @item.Repeticoes repetição(ões) · @item.Carga kg
+                            · Fator da técnica: @item.FatorTecnica.ToString("N2")
+                            @if (item.IntervaloSegundos > 0)
+                            {
+                                <div class="small text-body-secondary">Intervalo: @item.IntervaloSegundos s</div>
+                            }
+                        </div>
+                        <span class="badge text-bg-primary rounded-pill">
+                            Volume Load: @item.VolumeLoad.ToString("N2")
+                        </span>
+                    </li>
+                }
+            </ol>
+        }
+
+        <div class="d-flex justify-content-end gap-2 mt-4">
+            <a class="btn btn-outline-secondary rounded-pill px-4" asp-action="Listar">Voltar</a>
+            <a class="btn btn-outline-primary rounded-pill px-4" asp-action="Editar" asp-route-id="@Model.Id">Editar</a>
+        </div>
+    </div>
+</section>

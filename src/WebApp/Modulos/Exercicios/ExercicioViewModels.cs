@@ -15,10 +15,10 @@ public record CadastrarExercicioViewModel
     [StringLength(100, ErrorMessage = "O nome do exercício não pode exceder 100 caracteres.")]
     string Nome,
 
-    [Required(ErrorMessage = "A descrição do exercício é obrigatória.")]
     [StringLength(500, ErrorMessage = "A descrição do exercício não pode exceder 500 caracteres.")]
-    string Descricao,
+    string? Descricao,
 
+    [Required(ErrorMessage = "O grupo muscular do exercício é obrigatório.")]
     string GrupoMuscular
 
 );
@@ -29,10 +29,10 @@ public record EditarExercicioViewModel(
     [StringLength(100, ErrorMessage = "O nome do exercício não pode exceder 100 caracteres.")]
     string Nome,
 
-    [Required(ErrorMessage = "A descrição do exercício é obrigatória.")]
     [StringLength(500, ErrorMessage = "A descrição do exercício não pode exceder 500 caracteres.")]
-    string Descricao,
+    string? Descricao,
 
+    [Required(ErrorMessage = "O grupo muscular do exercício é obrigatório.")]
     string GrupoMuscular
 );
 

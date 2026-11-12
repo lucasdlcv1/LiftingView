@@ -1,0 +1,61 @@
+@{
+    Layout = "_Layout";
+    ViewBag.Titulo = "Detalhes do registro";
+}
+
+@model RegistroDto
+
+<section class="card shadow-sm">
+    <div class="card-body">
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+            <div>
+                <h3 class="h4">@Model.Data.ToString("dd/MM/yyyy")</h3>
+                <p class="text-body-secondary mb-0">@(Model.TreinoNome ?? "Treino removido")</p>
+            </div>
+            <div class="text-end">
+                <div class="small text-body-secondary">Volume Load total</div>
+                <strong class="fs-4">@Model.VolumeLoadTotal.ToString("N2")</strong>
+            </div>
+        </div>
+
+        @if (Model.ItensRegistro.Count == 0)
+        {
+            <p class="text-body-secondary">Este registro não possui exercícios.</p>
+        }
+        else
+        {
+            <ol class="list-group list-group-numbered">
+                @foreach (ItemRegistroDto item in Model.ItensRegistro.OrderBy(item => item.Ordem))
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-start gap-3">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-semibold">@item.ExercicioNome</div>
+                            @item.SeriesRealizadas série(s) × @item.RepeticoesRealizadas repetição(ões)
+                            · @item.CargaUtilizada kg · Fator da técnica: @item.FatorTecnica.ToString("N2")
+                            @if (!string.IsNullOrWhiteSpace(item.Observacoes))
+                            {
+                                <div class="small text-body-secondary">@item.Observacoes</div>
+                            }
+                        </div>
+                        <span class="badge text-bg-primary rounded-pill">
+                            Volume Load: @item.VolumeLoad.ToString("N2")
+                        </span>
+                    </li>
+                }
+            </ol>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(Model.Observacoes))
+        {
+            <div class="mt-4">
+                <h4 class="h6">Observações do registro</h4>
+                <p class="text-body-secondary mb-0">@Model.Observacoes</p>
+            </div>
+        }
+
+        <div class="d-flex justify-content-end gap-2 mt-4">
+            <a class="btn btn-outline-secondary rounded-pill px-4" asp-action="Listar">Voltar</a>
+            <a class="btn btn-outline-primary rounded-pill px-4" asp-action="Editar" asp-route-id="@Model.Id">Editar</a>
+        </div>
+    </div>
+</section>

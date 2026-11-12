@@ -25,6 +25,9 @@ public sealed class ItemTreino : EntidadeBase<ItemTreino>
 
     public Exercicio Exercicio { get; set; } = null!;
 
+    public decimal CalcularVolumeLoad() =>
+        (decimal)Series * Repeticoes * Carga * FatorTecnica;
+
     public override void Atualizar(ItemTreino entidadeAtualizada)
     {
         ExercicioId = entidadeAtualizada.ExercicioId;

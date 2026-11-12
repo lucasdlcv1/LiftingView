@@ -23,6 +23,6 @@ public record EditarItemTreinoDto(
     int Carga,
     decimal FatorTecnica);
 
-public record TreinoDto(Guid Id, string Nome, List<ItemTreinoDto> ItensTreino);
+public record TreinoDto(Guid Id, string Nome, List<ItemTreinoDto> ItensTreino, decimal VolumeLoadTotal);
 
-public record ItemTreinoDto(Guid Id, Guid TreinoId, Guid ExercicioId, int Series, int Repeticoes, int Ordem, int IntervaloSegundos, int Carga, decimal FatorTecnica);
+public record ItemTreinoDto(Guid Id, Guid TreinoId, Guid ExercicioId, string ExercicioNome, int Series, int Repeticoes, int Ordem, int IntervaloSegundos, int Carga, decimal FatorTecnica, decimal VolumeLoad);

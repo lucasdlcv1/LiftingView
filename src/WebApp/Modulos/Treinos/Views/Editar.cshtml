@@ -31,16 +31,25 @@
         </button>
     </div>
 
-    <div id="itens-treino" class="d-flex flex-column gap-3">
+    <div id="itens-treino" class="d-flex flex-column gap-3" data-sortable-list>
         @for (int i = 0; i < Model.ItensTreino.Count; i++)
         {
             EditarItemTreinoViewModel item = Model.ItensTreino[i];
-            <section class="item-treino border rounded-3 p-3">
+            <section class="item-treino border rounded-3 p-3" data-sortable-item>
                 <input type="hidden" name="ItensTreino.Index" value="@i">
                 <input type="hidden" name="ItensTreino[@i].Id" value="@item.Id">
+                <input type="hidden" name="ItensTreino[@i].Ordem" value="@item.Ordem" data-order-input>
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h6 class="mb-0">Exercício</h6>
-                    <button class="btn btn-outline-danger btn-sm remover-item" type="button">Remover</button>
+                    <div class="d-flex align-items-center gap-2">
+                        <button class="btn btn-outline-secondary btn-sm" type="button" draggable="true"
+                                data-drag-handle aria-label="Arrastar para reordenar">Mover</button>
+                        <h6 class="mb-0">Exercício <span class="badge text-bg-secondary" data-order-label></span></h6>
+                    </div>
+                    <div class="d-flex gap-1">
+                        <button class="btn btn-outline-secondary btn-sm" type="button" data-move-up aria-label="Subir">↑</button>
+                        <button class="btn btn-outline-secondary btn-sm" type="button" data-move-down aria-label="Descer">↓</button>
+                        <button class="btn btn-outline-danger btn-sm remover-item" type="button">Remover</button>
+                    </div>
                 </div>
 
                 <div class="mb-3">
@@ -74,11 +83,6 @@
                                type="number" min="1" value="@item.Repeticoes" required>
                     </div>
                     <div class="col-6 col-md-4">
-                        <label class="form-label" for="ItensTreino_@(i)__Ordem">Ordem</label>
-                        <input class="form-control" id="ItensTreino_@(i)__Ordem" name="ItensTreino[@i].Ordem" type="number"
-                               min="1" value="@item.Ordem" required>
-                    </div>
-                    <div class="col-6 col-md-4">
                         <label class="form-label" for="ItensTreino_@(i)__IntervaloSegundos">Intervalo (segundos)</label>
                         <input class="form-control" id="ItensTreino_@(i)__IntervaloSegundos"
                                name="ItensTreino[@i].IntervaloSegundos" type="number" min="0" value="@item.IntervaloSegundos"
@@ -106,12 +110,21 @@
 </form>
 
 <template id="modelo-item-treino">
-    <section class="item-treino border rounded-3 p-3">
+    <section class="item-treino border rounded-3 p-3" data-sortable-item>
         <input type="hidden" name="ItensTreino.Index" value="__index__">
         <input type="hidden" name="ItensTreino[__index__].Id" value="">
+        <input type="hidden" name="ItensTreino[__index__].Ordem" value="1" data-order-input>
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h6 class="mb-0">Exercício</h6>
-            <button class="btn btn-outline-danger btn-sm remover-item" type="button">Remover</button>
+            <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-outline-secondary btn-sm" type="button" draggable="true"
+                        data-drag-handle aria-label="Arrastar para reordenar">Mover</button>
+                <h6 class="mb-0">Exercício <span class="badge text-bg-secondary" data-order-label></span></h6>
+            </div>
+            <div class="d-flex gap-1">
+                <button class="btn btn-outline-secondary btn-sm" type="button" data-move-up aria-label="Subir">↑</button>
+                <button class="btn btn-outline-secondary btn-sm" type="button" data-move-down aria-label="Descer">↓</button>
+                <button class="btn btn-outline-danger btn-sm remover-item" type="button">Remover</button>
+            </div>
         </div>
         <div class="mb-3">
             <label class="form-label" for="ItensTreino___index____ExercicioId">Exercício</label>
@@ -134,11 +147,6 @@
                 <label class="form-label" for="ItensTreino___index____Repeticoes">Repetições</label>
                 <input class="form-control" id="ItensTreino___index____Repeticoes"
                        name="ItensTreino[__index__].Repeticoes" type="number" min="1" value="1" required>
-            </div>
-            <div class="col-6 col-md-4">
-                <label class="form-label" for="ItensTreino___index____Ordem">Ordem</label>
-                <input class="form-control" id="ItensTreino___index____Ordem" name="ItensTreino[__index__].Ordem"
-                       type="number" min="1" value="1" required>
             </div>
             <div class="col-6 col-md-4">
                 <label class="form-label" for="ItensTreino___index____IntervaloSegundos">Intervalo (segundos)</label>
@@ -168,11 +176,13 @@
         document.getElementById("adicionar-item").addEventListener("click", () => {
             const html = template.innerHTML.replaceAll("__index__", nextIndex++);
             container.insertAdjacentHTML("beforeend", html);
+            container.dispatchEvent(new Event("items-reordered"));
         });
 
         container.addEventListener("click", event => {
             if (event.target.closest(".remover-item"))
                 event.target.closest(".item-treino").remove();
+            container.dispatchEvent(new Event("items-reordered"));
         });
     })();
 </script>

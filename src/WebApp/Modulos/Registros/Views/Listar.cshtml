@@ -22,7 +22,10 @@ else
                 <article class="card h-100 shadow-sm">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
-                            <h3 class="h5 mb-0">@registro.Data.ToString("dd/MM/yyyy")</h3>
+                            <h3 class="h5 mb-0">
+                                <a class="link-body-emphasis text-decoration-none" asp-action="Detalhes"
+                                   asp-route-id="@registro.Id">@registro.Data.ToString("dd/MM/yyyy")</a>
+                            </h3>
                             <span class="badge text-bg-primary rounded-pill">
                                 @(registro.TreinoNome ?? "Treino removido")
                             </span>
@@ -44,12 +47,18 @@ else
                             }
                         </ul>
 
+                        <p class="text-body-secondary">
+                            Volume Load: <strong>@registro.VolumeLoadTotal.ToString("N2")</strong>
+                        </p>
+
                         @if (!string.IsNullOrWhiteSpace(registro.Observacoes))
                         {
                             <p class="card-text text-body-secondary">@registro.Observacoes</p>
                         }
 
                         <div class="d-flex justify-content-end gap-2">
+                            <a class="btn btn-primary btn-sm rounded-pill px-3" asp-action="Detalhes"
+                               asp-route-id="@registro.Id">Detalhes</a>
                             <a class="btn btn-outline-primary btn-sm rounded-pill px-3" asp-action="Editar"
                                asp-route-id="@registro.Id">Editar</a>
                             <a class="btn btn-outline-danger btn-sm rounded-pill px-3" asp-action="Excluir"

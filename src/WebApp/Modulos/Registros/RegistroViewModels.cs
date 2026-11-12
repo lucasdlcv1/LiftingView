@@ -16,7 +16,7 @@ public sealed class RegistroViewModel
     public DateTime Data { get; set; } = DateTime.Today;
 
     [StringLength(1000, ErrorMessage = "As observações não podem exceder 1000 caracteres.")]
-    public string Observacoes { get; set; } = string.Empty;
+    public string? Observacoes { get; set; }
 
     public List<ItemRegistroViewModel> ItensRegistro { get; set; } = [];
 }
@@ -24,6 +24,9 @@ public sealed class RegistroViewModel
 public sealed class ItemRegistroViewModel
 {
     public Guid? Id { get; set; }
+
+    [Range(1, int.MaxValue, ErrorMessage = "A ordem deve ser maior que zero.")]
+    public int Ordem { get; set; } = 1;
 
     [Required(ErrorMessage = "Selecione um exercício.")]
     public Guid? ExercicioId { get; set; }
@@ -37,8 +40,10 @@ public sealed class ItemRegistroViewModel
     [Range(0, int.MaxValue, ErrorMessage = "A carga não pode ser negativa.")]
     public int CargaUtilizada { get; set; }
 
+    public decimal FatorTecnica { get; set; } = 1;
+
     [StringLength(1000, ErrorMessage = "As observações não podem exceder 1000 caracteres.")]
-    public string Observacoes { get; set; } = string.Empty;
+    public string? Observacoes { get; set; }
 }
 
 public sealed record ExcluirRegistroViewModel(Guid Id, DateTime Data, string? TreinoNome);
